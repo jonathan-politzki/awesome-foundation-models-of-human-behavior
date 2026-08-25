@@ -44,7 +44,7 @@ mindmap
 
 **Methods**: [Transferable & ID-Free Recommendation](#transferable--id-free-recommendation) · [Scaling Laws for Behavior](#scaling-laws-for-behavior) · [Federated & Cross-Silo](#federated--cross-silo) · [Objectives, Representations & Theory](#objectives-representations--theory)
 
-**Measurement**: [Evaluation & Benchmarks](#evaluation--benchmarks) · [Datasets](#datasets)
+**Measurement**: [Evaluation & Benchmarks](#evaluation--benchmarks) · [Datasets](DATASETS.md)
 
 **Ecosystem**: [Privacy, Manipulation & Society](#privacy-manipulation--society) · [Companies & Ecosystem](#companies--ecosystem) · [Extras](#extras) · [Related lists](#related-lists) · [Contributing](#contributing) · [License](#license)
 
@@ -205,14 +205,6 @@ The recsys line that matters most here: does a user/item representation transfer
 - [Mind the Sim2Real Gap (User-Sim Index)](https://arxiv.org/abs/2603.11245) · CMU, COLM 2026. 451 humans vs. 31 LLM user simulators: simulators are too cooperative and stylistically uniform, simulation runs in "easy mode," and higher general capability does not yield more faithful simulation.
 - [Validation is the central challenge for generative social simulation](https://link.springer.com/article/10.1007/s10462-025-11412-6) · AI Review 2026. Systematic review of 35 LLM-ABM papers: most "validation" is face validity; only comparison to empirical human data meets a scientific bar, and it is the rarest strategy.
 
-## Datasets
-
-- [Psych-101](https://arxiv.org/abs/2410.20268) · Trial-by-trial data from 60K+ participants and ~10M choices across 160 psychology experiments; the training substrate released with Centaur.
-- [SocSci210](https://huggingface.co/socratesft) · 2.9M individual responses from 400K participants across 210 open-source social-science experiments, with seen/unseen-study generalization splits.
-- [MicroLens](https://arxiv.org/abs/2309.15379) · Westlake. 30M users, 1B interactions, raw short-video content, the largest content-driven recommendation dataset, built for training large behavioral models.
-- [Multimodal Banking Dataset](https://arxiv.org/abs/2409.17587) · Sber 2024. Large public benchmark of multimodal client event sequences with downstream tasks, shared evaluation infrastructure for transaction-behavior models.
-- [RelBench](https://relbench.stanford.edu/start) · Stanford/Kumo. 11 relational databases and ~66 tasks including churn, LTV, and purchase prediction as temporal entity-level prediction over event tables.
-
 ## Privacy, Manipulation & Society
 
 - [Private traits and attributes are predictable from digital footprints](https://www.pnas.org/doi/10.1073/pnas.1218772110) · Kosinski et al., PNAS 2013. Facebook Likes predict personality, orientation, and political views, the landmark demonstration that behavioral traces expose the latent person, and the field's foundational privacy warning.
@@ -225,7 +217,7 @@ The recsys line that matters most here: does a user/item representation transfer
 
 Companies named in the source literature that train or ship models of people from behavioral data (no funding claims; see the papers above for what is actually published):
 
-- [Jean Technologies](https://jeanmemory.com/) · developer of foundation models of human behavior and of the supporting memory/context infrastructure for companies building them; publishes the [AI Memory landscape review](https://www.jeanmemory.com/ai-memory-landscape-review.pdf).
+- [Jean Technologies](https://jeanmemory.com/) · develops foundation models of human behavior, and supports companies building their own.
 - [Unbox AI](https://unboxai.com/) · one next-event-prediction engine (BehaviorGPT / Large Behavioral Models) applied across consumption, workforce, and aesthetics; publishes the field's most rigorous vendor scaling study.
 - [Simile](https://www.simile.com/blog/confidence) · "agentic twins" of real consumers in the Park generative-agents lineage; trains a proprietary simulation model (Qwen3.5-27B fine-tune) on transactions plus AI-led interviews, with a published confidence model.
 - [Markopolo AI (ATHENA)](https://markopolo.ai/newsroom/athena/) · 709M-parameter edge-deployed behavioral FM trained across 603 independent businesses, predicting next actions in clickstream sequences.
