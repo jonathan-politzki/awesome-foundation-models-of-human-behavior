@@ -59,6 +59,33 @@ These are not obtainable, but they define the field's frontier; company, claimed
 - **Simile training data**. Grocery and delivery-app transactions plus AI-led voice interviews and surveys, fine-tuning a Qwen3.5-27B simulation model. Source: Building Confidence in Simile.
 - **Markopolo AI clickstreams**. Sequences from 603 independent businesses (e-commerce, SaaS, streaming) behind the 709M-parameter edge model ATHENA.
 
+## A taxonomy of behavioral data
+
+Extracted from the papers in the README: five axes that jointly locate any behavioral dataset. Useful because the field's datasets look wildly heterogeneous until you see that every one is a point in this same small space.
+
+**1. What is recorded (the substrate).** Ten recurring substrates across the list: interaction and engagement events (views, clicks, likes: the recsys logs); economic transactions (payments, purchases, credit: Visa, Sber, CoLES); communication and expression (posts, reviews, messages: the stated self in flow); movement (check-ins, trajectories: Foursquare, MoveGPT); clinical and biological events (UK Biobank, Epic Cosmos); administrative life events (jobs, address, education: the Danish registries, INPS); elicited responses (surveys, experiments, interviews: Psych-101, SocSci210, Twin-2K-500); screen and device interaction (Screenomics, Mind2Web); competitive play in closed worlds (Lichess, poker); and physiological signals (wearables, sensor panels).
+
+**2. How it comes to exist (the generative stance).** Logged (a byproduct of using a service; nobody asked), elicited (someone asked: surveys, interviews, lab tasks), instrumented (a sensor watched), or derived (inferred from other data). Logged and instrumented data are nonreactive (people do not perform for the record); elicited data is reactive by construction. This is the revealed/stated distinction restated as a property of collection.
+
+**3. Structure.** Timestamped discrete event streams (the dominant FM substrate), session logs, panel waves, relational tables, continuous time series, and free text or dialogue. The field's convergent move is to force all of these into one chronological event stream with a learned vocabulary; the tokenizer is where a structure either survives or dies.
+
+**4. Temporal economics: stock versus flow.** Text is a mined stock, accumulated over decades and consumed once ([Epoch estimates](https://arxiv.org/abs/2211.04325) public text in the low hundreds of trillions of tokens, with exhaustion projected within years). Behavioral data is a flow, regenerated daily by ordinary activity at volumes the Unbox position paper estimates at 100 to 1000 times internet text for retail and payments alone. If pretraining as we know it ends when the text stock does, the behavioral flow is the successor substrate.
+
+**5. Access and linkage.** The three tiers of this file (public, gated, private), crossed with person-linkage: identified, pseudonymous, de-identified, or aggregate-only; and single-domain versus cross-domain per person. The empty cell (cross-domain, per-person, shareable) is the one the field's thesis most needs.
+
+**Properties, not types.** The standard property-taxonomy of behavioral trace data is Salganik's ten characteristics ([Bit by Bit](https://www.bitbybitbook.com/en/1st-ed/observing-behavior/characteristics/), Princeton 2017): big, always-on, and nonreactive (the good), incomplete, inaccessible, nonrepresentative, drifting, algorithmically confounded, dirty, and sensitive (the bad). Every dataset above scores differently on these ten, and most modeling failures in the field trace to one of the bad seven.
+
+## The composition of the world's data
+
+Anchors for the question of what all the world's data actually consists of:
+
+- [The World's Technological Capacity to Store, Communicate, and Compute Information](https://www.science.org/doi/10.1126/science.1200970) (Hilbert and Lopez, Science 2011). The canonical academic measurement: 60 technologies tracked 1986 to 2007, roughly 300 exabytes optimally compressed stored by 2007, with composition by medium.
+- IDC Global DataSphere (Reinsel, Gantz, Rydning, 2018 onward). The industry estimate: ~175 zettabytes created annually by 2025, dominated by video, surveillance, and IoT sensor streams rather than text.
+- [Will we run out of data?](https://arxiv.org/abs/2211.04325) (Villalobos et al., Epoch). The usable public text stock and its exhaustion horizon.
+- [Large Behavioral Models](https://research.unboxai.com/large-behavioral-models.html) (Unbox AI). The behavioral-flow counterclaim: retail and payments behavior alone may exceed internet text by 100 to 1000 times.
+
+The synthesis these four support: curated public text, the substrate of the current FM era, is a small and nearly exhausted sliver of the world's data. The bulk is continuous sensor and video streams plus behavioral event flows, both regenerating daily, both largely unpooled and private. Which is why access, not compute, is this field's binding constraint.
+
 ## Observations
 
 - The public tier is dominated by two narrow slices of human behavior: e-commerce and media clicks on one side, lab psychology and survey experiments on the other. Almost nothing public is naturalistic, longitudinal, and per-person at once.
