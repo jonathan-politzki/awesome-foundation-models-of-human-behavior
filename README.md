@@ -1,5 +1,7 @@
 # Awesome Foundation Models of Human Behavior
 
+If you are interested in this space reach out to me at jonathan@jeantechnologies.com!
+
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
 A curated list for the emerging field of **foundation models of human behavior**: models pretrained on records of what people do (event logs, life trajectories, transactions, interactions) whose learned representations of people transfer across many tasks. The subject is the model *of* the person, not a model built *for* one task. The work is scattered across communities that rarely cite each other; this list is the shared shelf.
