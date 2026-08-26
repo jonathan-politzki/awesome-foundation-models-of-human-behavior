@@ -251,6 +251,13 @@ No trained person-model; a frontier LLM's priors, steered by prompts or retrieve
 - [CitySim: Large-Scale LLM-Driven Urban Agent Simulation](https://arxiv.org/abs/2506.21805) · Woven by Toyota 2025. Up to 1M persona-driven LLM agents in a graph model of Tokyo; aggregate time-use and commute patterns match national survey data, but on individual well-being prediction it loses to a gradient-boosting baseline (F1 0.36 vs 0.45), the population-vs-individual boundary in one paper.
 - [Scaling Synthetic Data Creation with 1,000,000,000 Personas (Persona Hub)](https://arxiv.org/abs/2406.20094) · Tencent 2024. A billion LLM-imagined personas for synthetic data diversity, the instructive foil: persona diversity is cheap; fidelity to real individuals is the hard part.
 
+### Simulation as training signal
+
+Run the expensive person-prior offline, distill into a cheap servable model. Wins concentrate in cold-start and sparse regimes; the student inherits the simulator's priors and distortions.
+
+- [LLMRec: Large Language Models with Graph Augmentation for Recommendation](https://arxiv.org/abs/2311.00423) · WSDM 2024. The LLM samples plausible user-item interaction edges and profiles; a graph CF model trains on the densified graph.
+- [SUBER: An RL Environment with Simulated Human Behavior for Recommender Systems](https://arxiv.org/abs/2406.01631) · 2024. An RL recommender trained against LLM-simulated users generating rewards from persona and history ([code](https://github.com/SUBER-Team/SUBER); sibling: [Lusifer](https://arxiv.org/abs/2405.13362)).
+
 ### Memory & context interface
 
 Where the person-representation lives when it is tokens rather than weights.
