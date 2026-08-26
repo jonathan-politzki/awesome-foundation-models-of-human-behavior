@@ -13,6 +13,7 @@ These are the data substrates that the models in the [README](README.md) actuall
 - **OdysSim corpus** ([paper](https://arxiv.org/abs/2606.14199)). 21.4M interactions / 10B tokens aggregated from 62 behavioral datasets. Used by: OdysSim (OSim).
 - **HUMANUAL** ([code](https://github.com/zou-group/humanlm)). Six public-data collections: 23K users, 227K responses (daily-life issues, political blogs, chat sessions). Used by: HumanLM.
 - **Cognitive Genome** ([code](https://github.com/microsoft/AnthropomorphicIntelligence)). 5.5M public logs from 282K identified Reddit/Twitter/Blogger/Amazon users, distilled into 1.27M QA pairs. Used by: HumanLLM.
+- **OpenOneRec dataset + RecIF-Bench** ([paper](https://arxiv.org/abs/2512.24762), [code](https://github.com/Kuaishou-OneRec/OpenOneRec)). 96M interactions from 160K users, with an 8-task benchmark from prediction to reasoning; released with the open OneRec-Foundation models (Kuaishou). Used by: OpenOneRec.
 - **MicroLens** ([paper](https://arxiv.org/abs/2309.15379)). 30M users, 1B interactions, raw short-video content; the largest content-driven recommendation dataset, built for training large behavioral models.
 - **NineRec** ([paper](https://arxiv.org/abs/2309.07705)). 2M-user pretraining set plus nine downstream scenarios, including cross-platform transfer. Used by: the transferable/ID-free recommendation line (UniSRec, VQ-Rec, MoRec descendants).
 - **MIND**. Microsoft news-recommendation logs. Used by: FedKD.
