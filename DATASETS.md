@@ -1,99 +1,138 @@
-# Datasets behind foundation models of human behavior
+# Data and benchmarks
 
-These are the data substrates that the models in the [README](README.md) actually train and evaluate on, grouped by access level, with the papers that use each. Access is the field's binding constraint: the public tier is small and narrow, the richest longitudinal substrates sit behind applications, and the largest corpora are platform logs no outsider can touch. Scale claims are as reported in the cited papers.
+What the models in the [README](README.md) actually train and are measured on, with what is inside each one rather than just its name.
+
+**Access is the field's binding constraint**, and the tiers below are ordered by it. The public tier is small and narrow. The richest longitudinal substrates sit behind applications. The largest corpora are platform logs no outsider can touch, which is why the frontier results are unreproducible. Scale figures are as reported in the cited papers.
+
+```mermaid
+graph LR
+  A["Public<br/>anyone can download"] --> B["Gated<br/>application or IRB"] --> C["Private<br/>platform logs"]
+  A -.->|"narrow, short horizon,<br/>one surface"| A2["reproducible"]
+  B -.->|"decades per person,<br/>cross-domain"| B2["the richest substrate"]
+  C -.->|"billions of people,<br/>years of events"| C2["where the results come from"]
+```
 
 ## Public
 
-- **MovieLens 25M**. Movie rating and interaction sequences with timestamps and text metadata; the standard sequential-recommendation substrate. Used by: RecFound-style unified recommendation FMs and the SASRec/BERT4Rec lineage of baselines.
-- **Amazon Reviews 2023** (McAuley lab). Product interaction sequences with rich item text across dozens of categories. Used by: RecFound-style work, UniSRec-lineage transfer studies, HumanLLM (as one of its public trace sources).
-- **Psych-101** ([paper](https://arxiv.org/abs/2410.20268)). Trial-by-trial choices from 60K+ participants, ~10M choices across 160 psychology experiments. Used by: Centaur, Small Foundation Models of Human Cognition and Behaviour.
-- **SocSci210** ([data](https://huggingface.co/socratesft)). 2.9M individual responses from 400K participants across 210 open social-science experiments, with seen/unseen-study splits. Used by: Socrates.
-- **choices13k**. ~13K risky-choice problems from large-scale decision experiments. Used by: Peterson et al. (Science 2021) theory discovery from prediction.
-- **Twin-2K-500** ([data](https://huggingface.co/datasets/LLM-Digital-Twin/Twin-2K-500)). 2,058 US participants answering 500+ questions across four waves, with a held-out wave as per-person ground truth. Used by: digital-twin benchmarking.
-- **OdysSim corpus** ([paper](https://arxiv.org/abs/2606.14199)). 21.4M interactions / 10B tokens aggregated from 62 behavioral datasets. Used by: OdysSim (OSim).
-- **HUMANUAL** ([code](https://github.com/zou-group/humanlm)). Six public-data collections: 23K users, 227K responses (daily-life issues, political blogs, chat sessions). Used by: HumanLM.
-- **Cognitive Genome** ([code](https://github.com/microsoft/AnthropomorphicIntelligence)). 5.5M public logs from 282K identified Reddit/Twitter/Blogger/Amazon users, distilled into 1.27M QA pairs. Used by: HumanLLM.
-- **OpenOneRec dataset + RecIF-Bench** ([paper](https://arxiv.org/abs/2512.24762), [code](https://github.com/Kuaishou-OneRec/OpenOneRec)). 96M interactions from 160K users, with an 8-task benchmark from prediction to reasoning; released with the open OneRec-Foundation models (Kuaishou). Used by: OpenOneRec.
-- **MicroLens** ([paper](https://arxiv.org/abs/2309.15379), CIKM 2025). 34M users, 1M micro-videos, 1B interactions, shipped as **raw** titles, cover images, audio, and full-length video rather than pre-extracted features; the largest content-driven recommendation dataset. The raw release is the point: it permits end-to-end modality training instead of the two-stage frozen-feature pipeline MoRec shows degrades performance.
-- **NineRec** ([paper](https://arxiv.org/abs/2309.07705)). 2M-user pretraining set plus nine downstream scenarios, including cross-platform transfer. Used by: the transferable/ID-free recommendation line (UniSRec, VQ-Rec, MoRec descendants).
-- **Tenrec** ([paper](https://arxiv.org/abs/2210.10629), NeurIPS 2022 Datasets & Benchmarks; [site](https://tenrec0.github.io/)). ~5M users, ~140M interactions across **four scenarios** (QQ Kandian and QQ Browser × video and article), with **users and items overlapping between scenario pairs**, positive feedback in several forms plus **true negative feedback**, and 10+ defined benchmark tasks. The best public substrate for cross-surface transfer: overlap is *partial and varies by pair*, so you can sweep both panel size and overlap fraction. Still cross-surface within one company, not cross-company.
-- **ColdRec-1 / ColdRec-2** ([paper](https://arxiv.org/abs/2001.04253), [code](https://github.com/fajieyuan/SIGIR2020_peterrec)). Paired source/target logs where **the same users appear on both sides**: source is QQ Browser news (50 or 100 recent interactions per user), target is Kandian where every user is cold-start (≤3 or ≤5 interactions). Released with PeterRec; the evaluation protocol built on it (user-profile prediction on held-out tasks) became the field's transfer benchmark. The rare public dataset with ground-truth user correspondence across surfaces.
-- **PixelRec** ([paper](https://arxiv.org/abs/2309.06789), [code](https://github.com/westlake-repl/PixelRec)). ~200M user-image interactions, 30M users, 400K video cover images across 118 themes, with a benchmark spanning nine recommendation architectures × nine image encoders. Items modeled from **raw pixels** rather than IDs or frozen features.
-- **The BARS / FuxiCTR benchmark suite** ([BARS](https://openbenchmark.github.io/BARS/), [FuxiCTR](https://github.com/reczoo/FuxiCTR), [datasets](https://github.com/reczoo/Datasets)). The **CTR-prediction** evaluation tradition, scored with AUC and LogLoss rather than Recall@K, with public leaderboards and **trackable dataset IDs** pinning exact preprocessing. Standard members: **TaobaoAd** (26M ad display/click records over 8 days, sampled from 1.14M users, shipping ad features *and* a user-profile table with gender, age level, consumption grade, shopping level, city tier), **KuaiVideo** (3.24M user-video interactions from 10K users), and **Amazon Electronics** in its CTR framing (192K users, 63K items, ~3M samples). Used by: LoopFM, InterFormer, Wukong, and the industrial ads line generally. Worth having for two reasons: it is the ads-side substrate the sequential-rec datasets above do not cover, and TaobaoAd is a rare public corpus carrying **both ad-response labels and demographic fields**, so profile-probing and CTR can be measured on one dataset.
-- **MIND**. Microsoft news-recommendation logs. Used by: FedKD.
-- **Multimodal Banking Dataset** ([paper](https://arxiv.org/abs/2409.17587)). Large public benchmark of multimodal bank-client event sequences with downstream tasks; shared evaluation infrastructure for transaction-behavior models (Sber).
-- **RelBench** ([site](https://relbench.stanford.edu/start)). 11 relational databases, ~66 temporal entity-level tasks including churn, LTV, and purchase prediction. Used by: Relational Deep Learning, KumoRFM.
-- **Lichess open database**. Billions of timestamped chess games, the same identified player across years, finite move vocabulary, Elo ground truth. Used by: Maia, behavioral stylometry (McIlroy-Young et al.).
-- **IRC Poker Database (U. Alberta) and PHH dataset (UofT CPRG)**. ~10M hands (1995-2001) with persistent pseudonymous players, plus 21.6M anonymized real-money hands; betting sequences as fully observed style signal.
-- **Taobao UserBehavior / Tmall / Yoochoose / RetailRocket**. E-commerce clickstreams with view, cart, and purchase event types; standard multi-event-type substrates for sequential behavior modeling.
-- **Steam / Last.fm / Spotify Million Playlist**. Play and purchase histories over long horizons; long per-user sequences with strong habit signal.
-- **Foursquare / Gowalla check-ins**. Time-and-place mobility events; a recurring substrate for next-location prediction.
-- **GSS (General Social Survey, NORC)**. US attitude and behavior survey since 1972; the 2006-2014 panel waves reinterview the same respondents, enabling test-retest-normalized evaluation. Used by: Generative Agent Simulations of 1,000 People (ground truth), the genagents agent bank.
-- **Mind2Web-style computer-use sets** (Mind2Web, AgentNet, OS-Genesis). Screen-level human-computer interaction traces; the substrate bridging user modeling and computer-use agents.
+### Behavioral logs: recommendation, clickstreams, media
 
-## Gated / application-required
+| Dataset | Unit of behavior | Scale | Why it matters | Used by |
+|---|---|---|---|---|
+| **[Yambda-5B](https://arxiv.org/abs/2505.22238)** (Yandex Music) | music listens, likes, dislikes | 4.79B events · 1M users · 9.39M tracks · 11 months | largest open behavioral log ever released; ships audio embeddings and *explicit negative* feedback | scale-side of the missing-ImageNet argument |
+| **[Tenrec](https://arxiv.org/abs/2210.10629)** (Tencent, NeurIPS 2022 D&B) | clicks, likes, shares, follows, **and true negatives** | ~5M users · ~140M interactions · **4 scenarios** | users and items **overlap between scenario pairs, partially and unevenly**, so you can sweep both panel size and overlap fraction; the best public cross-surface substrate | cross-domain transfer, multi-target CDR |
+| **[ColdRec-1 / ColdRec-2](https://arxiv.org/abs/2001.04253)** (Tencent) | news and video watches | 50 or 100 source interactions/user; target users have ≤3 or ≤5 | **the same users appear on both sides** with ground-truth correspondence; source is QQ Browser, target is Kandian where everyone is cold-start | PeterRec, and the profile-probe protocol built on it |
+| **[MicroLens](https://arxiv.org/abs/2309.15379)** (CIKM 2025) | short-video watches | 34M users · 1M videos · 1B interactions | ships **raw** titles, cover images, audio, and full video, not extracted features, so end-to-end modality training is possible | content-driven recommendation at scale |
+| **[NineRec](https://arxiv.org/abs/2309.07705)** | multi-domain interactions with item text + images | 2M-user pretraining set · **9 downstream scenarios** | five same-platform and four **different-platform** targets: the within-wall vs across-wall split, made measurable | the transferable / ID-free line |
+| **[PixelRec](https://arxiv.org/abs/2309.06789)** | image-item interactions | ~200M interactions · 30M users · 400K cover images | items modeled from **raw pixels**; benchmark spans 9 architectures × 9 image encoders | modality-transfer studies |
+| **[OpenOneRec + RecIF-Bench](https://arxiv.org/abs/2512.24762)** (Kuaishou) | short-video, ads, product interactions | ~96M–100M interactions · 160K–200K users | released *with open model weights*; 8 tasks in a four-layer capability ladder from semantic alignment to reasoning | OpenOneRec |
+| **[MovieLens 25M](https://grouplens.org/datasets/movielens/)** | movie ratings and interactions | 25M ratings | the default sequential-rec substrate; text metadata enables content modeling | SASRec/BERT4Rec lineage |
+| **[Amazon Reviews 2023](https://amazon-reviews-2023.github.io/)** (McAuley lab) | product interactions with rich item text | dozens of categories | the standard cross-domain transfer testbed | UniSRec lineage, MiniOneRec |
+| **[Taobao UserBehavior / Tmall / Yoochoose / RetailRocket](https://tianchi.aliyun.com/dataset/649)** | e-commerce view, cart, purchase | varies | multi-event-type streams with real intent structure | sequential behavior modeling |
+| **[Steam / Last.fm / Spotify MPD](https://www.aicrowd.com/challenges/spotify-million-playlist-dataset-challenge)** | plays and purchases over long horizons | varies | long per-user sequences with strong habit signal | habit and long-horizon modeling |
+| **[Foursquare / Gowalla](https://sites.google.com/site/yangdingqi/home/foursquare-dataset)** | check-ins | varies | time-and-place mobility; highly habitual | next-location prediction |
+| **[MIND](https://msnews.github.io/)** (Microsoft) | news click logs | ~1M users | the federated-recsys default | FedKD |
+| **[Lichess database](https://database.lichess.org/)** | chess moves | billions of games, same player across years | finite move vocabulary, Elo ground truth, **persistent identified individuals**; behavioral stylometry proved identity is decodable from moves alone | Maia, behavioral stylometry |
+| **[IRC Poker DB](https://poker.cs.ualberta.ca/irc_poker_database.html) / PHH** | betting sequences | ~10M hands (1995–2001) · 21.6M anonymized real-money hands | betting is fully observed style signal; multi-agent table dynamics | poker style modeling |
+| **[Mind2Web / AgentNet / OS-Genesis](https://osu-nlp-group.github.io/Mind2Web/)** | screen-level computer use | varies | the richest modality; bridges user modeling and computer-use agents | GUM, computer-use agents |
 
-- **UK Biobank**. Long-horizon health timelines of UK participants. Used by: Delphi-2M (training; forecasting 1,000+ diseases ~20 years out).
-- **Danish national registries** (Statistics Denmark). Health, education, job, income, and address events at day resolution for the whole population. Used by: life2vec (training), Delphi-2M (external validation on 1.9M Danes).
-- **Italian social-security records (INPS)**. Administrative work and income trajectories. Used by: Life Sequence Transformer.
-- **Epic Cosmos**. 118M patients, 115B medical events pooled across Epic health systems; research access through the Epic community. Used by: CoMET.
-- **Longitudinal panels** (PSID, NLSY79/97, HRS, Add Health, MIDUS, German SOEP, UK birth cohorts). Decades-long trajectories of the same individuals: income, health, family, attitudes. Free with registration; licenses prohibit re-identification, so they support trajectory modeling but not named personas. Used by: LifeSentence-style panel work.
-- **genagents interview tier** (Stanford, by application). The 1,000 two-hour interviews and individual ground-truth responses behind Generative Agent Simulations of 1,000 People; the demographic agent tier is public.
-- **Screenomics screen logs** (IRB-restricted). 20 users, one month, 1.9M screenshots captioned into 360K actions. Used by: LongNAP.
+### Elicited and experimental behavior
 
-## Private / proprietary
+| Dataset | Unit of behavior | Scale | Why it matters | Used by |
+|---|---|---|---|---|
+| **[Psych-101](https://arxiv.org/abs/2410.20268)** | trial-by-trial experimental choices | ~10M choices · 60K+ participants · 160 experiments | the cognition-side pretraining corpus | Centaur, Small FMs of Human Cognition |
+| **[SocSci210](https://huggingface.co/socratesft)** | social-science experiment responses | 2.9M responses · 400K participants · 210 experiments | ships **seen/unseen-study splits**, so generalization to a new experiment is measurable | Socrates |
+| **[choices13k](https://github.com/jcpeterson/choices13k)** | risky-choice decisions | ~13K problems | the substrate for theory discovery from prediction | Peterson et al. (Science 2021) |
+| **[Twin-2K-500](https://huggingface.co/datasets/LLM-Digital-Twin/Twin-2K-500)** | survey responses across four waves | 2,058 US participants · 500+ questions | **a held-out wave as per-person ground truth**, the right shape for digital-twin evaluation | digital-twin benchmarking |
+| **[GSS](https://gss.norc.org/)** (NORC) | attitudes and reported behavior | since 1972; 2006–2014 panel waves reinterview the same people | test-retest normalization, so you can score a simulation against a person's own reliability ceiling | Generative Agent Simulations of 1,000 People |
+| **[HUMANUAL](https://github.com/zou-group/humanlm)** | daily-life issues, political blogs, chat | 23K users · 227K responses | six public collections unified | HumanLM |
+| **[Cognitive Genome](https://github.com/microsoft/AnthropomorphicIntelligence)** | Reddit/Twitter/Blogger/Amazon logs | 5.5M logs · 282K identified users → 1.27M QA pairs | public traces distilled into person-conditioned QA | HumanLLM |
+| **[OdysSim corpus](https://arxiv.org/abs/2606.14199)** | aggregated behavioral records | 21.4M interactions · 10B tokens · 62 datasets | the pooled-corpus approach to the scarcity problem | OdysSim |
 
-These are not obtainable, but they define the field's frontier; company, claimed scale, and reporting paper.
+### Relational, transactional, and other
 
-- **Meta action streams**. User action sequences across Meta surfaces; HSTU deployed at 1.5T parameters with +12.4% online gains; GEM trained on thousands of GPUs, +5% Instagram ad conversions. Papers: HSTU, GEM.
-- **Netflix member histories**. Tokenized interaction histories of all members; production models scaled 2M to 1B parameters. Papers: Netflix Foundation Model, GenRec, Netflix scaling study.
-- **Kuaishou logs**. Short-video interaction streams at 400M+ DAU. Paper: OneRec.
-- **ByteDance / Douyin logs**. Behavior sequences up to 10K events per user at billion-user scale; 7B+7B item/user models. Papers: HLLM, Douyin system.
-- **Alibaba / Taobao logs**. Commerce behavior at platform scale; power-law gains up to 7B parameters, +2.9% CTR in Taobao sponsored search. Papers: LUM, RecGPT-V2.
-- **Ant Group / Alipay logs**. Billion-user payments and behavior data. Paper: Towards a Densing Law for User Representation Learning.
-- **LinkedIn member histories**. Verbalized professional activity serving 30+ ranking tasks with one 150B model. Paper: 360Brew.
-- **Pinterest action streams**. Lifelong user action sequences; billion-scale user-sequence FM, ~2.5% sitewide gains. Papers: PinnerFormer, TransAct V2, OmniSage, PinFM.
-- **Yandex user histories**. Year-long histories including negative feedback; models scaled 3.2M to 1B parameters. Paper: ARGUS.
-- **Tencent ads logs**. Billions of daily samples; FM representations transferred into ads models for +2.45% platform GMV. Papers: LFM4Ads, GPR.
-- **Meituan logs**. Billion-user local-commerce platform traffic. Paper: MTGR.
-- **Amazon shopping behavior and Airbnb guest journeys**. Shared customer model pretrained over shopping behavior (MCM); multi-week search-to-booking sequences (JourneyFormer).
-- **Visa transaction network**. Consumer transactions plus payment-network signals; TransactionGPT reports +22.5% over the production model. Papers: TREASURE, TransactionGPT.
-- **Stripe / Plaid / Mastercard / Nubank transactions**. Stripe trained on tens of billions of transactions; Plaid trains one model across ~12,000 institutions; Mastercard and Nubank run analogous builds. Source: industry writeups in the README.
-- **Sber client streams**. Banking transactions, online interactions, and communications unified into one event stream, deployed at a major bank. Papers: CoLES, LATTE, Sber multimodal event FM.
-- **Unbox AI retail corpus**. Anonymized retail events, ~10^8 unique actions and ~10^9 event tokens, used for ~600 scaling-law runs across 10^15-10^19 FLOPs. Paper: Scaling Laws for Behavioral Foundation Models.
-- **Simile training data**. Grocery and delivery-app transactions plus AI-led voice interviews and surveys, fine-tuning a Qwen3.5-27B simulation model. Source: Building Confidence in Simile.
-- **Markopolo AI clickstreams**. Sequences from 603 independent businesses (e-commerce, SaaS, streaming) behind the 709M-parameter edge model ATHENA.
+| Dataset | Unit of behavior | Scale | Why it matters | Used by |
+|---|---|---|---|---|
+| **[RelBench](https://relbench.stanford.edu/start)** | relational database events | 11 databases · ~66 temporal tasks | churn, LTV, purchase prediction from raw relational data, no feature engineering | Relational Deep Learning, KumoRFM |
+| **[Multimodal Banking Dataset](https://arxiv.org/abs/2409.17587)** (Sber) | bank-client event sequences | large, multimodal | the only substantial public transaction benchmark | transaction-behavior models |
+
+## Gated: application or IRB required
+
+| Dataset | What is in it | Access | Used by |
+|---|---|---|---|
+| **UK Biobank** | long-horizon health timelines | application | Delphi-2M (forecasting 1,000+ diseases ~20 years out) |
+| **Danish national registries** (Statistics Denmark) | health, education, job, income, address events at **day resolution for an entire population** | researcher application | life2vec (training), Delphi-2M (external validation on 1.9M Danes) |
+| **Italian social-security records (INPS)** | administrative work and income trajectories | application | Life Sequence Transformer |
+| **Epic Cosmos** | 118M patients · 115B medical events pooled across health systems | Epic community | CoMET |
+| **Longitudinal panels** (PSID, NLSY79/97, HRS, Add Health, MIDUS, German SOEP, UK birth cohorts) | decades of income, health, family, attitudes for the same individuals | free with registration; **re-identification prohibited**, so trajectories yes, named personas no | panel-based trajectory work |
+| **genagents interview tier** (Stanford) | 1,000 two-hour interviews + individual ground-truth responses | by application (demographic tier is public) | Generative Agent Simulations of 1,000 People |
+| **Screenomics screen logs** | 20 users · one month · 1.9M screenshots → 360K captioned actions | IRB-restricted | LongNAP |
+
+**The pattern worth noticing**: the gated tier is where *cross-domain coverage of one person* lives. Health plus income plus employment plus family, for the same individual, over decades. No company has this, which is why the national-registry work is the field's actual ceiling on person-coverage.
+
+## Private: platform logs
+
+Not obtainable, but they define the frontier. Company, claimed scale, and the paper that reports it.
+
+| Holder | Data | Reported scale / result | Papers |
+|---|---|---|---|
+| **Meta** | action streams across Family of Apps | HSTU at 1.5T params, +12.4% online; GEM on thousands of GPUs, +5% IG ad conversions, 20–25% MFU | HSTU, GEM, ExFM, LoopFM, Kunlun, LLaTTE |
+| **Netflix** | tokenized member histories | production models scaled 2M → 1B params | Netflix FM, GenRec, Netflix scaling study |
+| **Kuaishou** | short-video interaction streams | 400M+ DAU; Pro checkpoints trained on ~130B tokens **and released** | OneRec, OpenOneRec |
+| **ByteDance / Douyin** | behavior sequences | up to 10K events per user, billion-user scale; 7B+7B item/user models | HLLM, Douyin system |
+| **Alibaba / Taobao** | commerce behavior | power-law gains to 7B params; +2.9% CTR in sponsored search | LUM, RecGPT-V2 |
+| **Ant Group / Alipay** | payments + behavior | billion-user; 84× memory reduction, 3.5× faster training via user tokenization | FOUNDv2/U2QT, Densing Law |
+| **LinkedIn** | verbalized member activity | one 150B model serving 30+ ranking tasks | 360Brew |
+| **Pinterest** | lifelong action streams | billion-scale user-sequence FM; ~2.5% sitewide | PinnerFormer, TransAct V2, OmniSage, PinFM |
+| **Snap** | cross-surface engagement (Content, Ads, Growth, Lens) | 1+ year of history per user; six consuming surfaces | UUM |
+| **Spotify** | listening histories | 80-dim embeddings at 6mo/1mo/1wk; +13% item-to-stream conversion | Generalized User Representations, GLIDE |
+| **Yandex** | year-long histories incl. negative feedback | 3.2M → 1B params, gains at every step | ARGUS |
+| **Tencent** | ads logs | billions of daily samples; +2.45% platform GMV | LFM4Ads, GPR |
+| **Meituan** | local-commerce traffic | billion-user | MTGR |
+| **Amazon / Airbnb** | shopping behavior; guest journeys | shared customer model; multi-week search-to-booking | MCM, JourneyFormer |
+| **Visa** | consumer transactions + network signals | +22.5% over production model | TREASURE, TransactionGPT |
+| **Stripe / Plaid / Mastercard / Nubank** | payments | Stripe on tens of billions of transactions; **Plaid across ~12,000 institutions** | industry writeups |
+| **Sber** | transactions, online interactions, communications in one event stream | deployed at a major bank | CoLES, LATTE, Sber multimodal event FM |
+| **Unbox AI** | anonymized retail events | ~10^8 unique actions, ~10^9 event tokens; ~600 scaling runs over 10^15–10^19 FLOPs | Scaling Laws for Behavioral FMs |
+| **Simile** | grocery/delivery transactions + AI-led voice interviews | fine-tunes a Qwen3.5-27B simulation model | Building Confidence in Simile |
+
+## Benchmarks
+
+Where the field measures itself. Note the asymmetry: **CTR prediction has a standing, versioned, leaderboard-backed benchmark; person-representation quality and cross-domain transfer do not.**
+
+### Prediction and ranking
+
+| Benchmark | What it scores | Notable |
+|---|---|---|
+| **[BARS / FuxiCTR](https://openbenchmark.github.io/BARS/)** | CTR prediction (AUC, LogLoss) | public leaderboards and **pinned dataset IDs** so a result names its exact preprocessing; standard members are TaobaoAd (26M ad records, 1.14M users, ships demographic profile fields), KuaiVideo (3.24M interactions, 10K users), and Amazon Electronics in CTR framing (192K users, ~3M samples) |
+| **[RecIF-Bench](https://arxiv.org/abs/2512.24762)** | 8 tasks across short video, ads, product | a four-layer capability ladder: semantic alignment → prediction → instruction following → reasoning |
+| **[NineRec](https://arxiv.org/abs/2309.07705)** | cross-domain and cross-platform transfer | the closest thing to a standing transfer benchmark |
+| **[RecAI / RecLM-eval](https://github.com/microsoft/RecAI)** | retrieval, ranking, explainability for LM-based recommenders | ships alongside **RecExplainer** (KDD 2024), which uses LLMs as surrogate models to interpret deep recommenders |
+
+### Simulation and person fidelity
+
+| Benchmark | What it scores | Headline finding |
+|---|---|---|
+| **[SimBench](https://arxiv.org/abs/2510.17516)** | group-level simulation, 20 datasets unified | best LLMs score ~41/100; fidelity scales with model size but **not** with inference-time compute |
+| **[BehaviorBench](https://arxiv.org/abs/2606.24162)** | behavior prediction, strategic decisions, trait inference | general LLMs win *individual* prediction; behavior-fine-tuned models win *distributional* alignment |
+| **[Twin-2K-500](https://arxiv.org/pdf/2505.17479)** | digital twins against a held-out wave | per-person ground truth rather than aggregate match |
+| **[PersonaGym](https://arxiv.org/abs/2407.18416)** | persona-agent consistency | frontier models fail to stay in character, and **larger models are not reliably better** |
+| **[TwinVoice](https://arxiv.org/pdf/2510.25536)** | imitation of specific individuals | decomposed into opinion consistency, memory recall, linguistic style |
+| **[Mind the Sim2Real Gap](https://arxiv.org/abs/2603.11245)** (CMU, COLM 2026) | 451 humans vs 31 LLM user simulators | simulators are too cooperative and stylistically uniform; simulation runs in "easy mode," and higher general capability does not yield more faithful simulation |
+| **[Validation is the central challenge](https://link.springer.com/article/10.1007/s10462-025-11412-6)** (AI Review 2026) | systematic review of 35 LLM-ABM papers | most "validation" is face validity; comparison to empirical human data is the only scientific bar and the **rarest** strategy |
 
 ## A taxonomy of behavioral data
 
-Extracted from the papers in the README: five axes that jointly locate any behavioral dataset. Useful because the field's datasets look wildly heterogeneous until you see that every one is a point in this same small space.
-
-**1. What is recorded (the substrate).** Ten recurring substrates across the list: interaction and engagement events (views, clicks, likes: the recsys logs); economic transactions (payments, purchases, credit: Visa, Sber, CoLES); communication and expression (posts, reviews, messages: the stated self in flow); movement (check-ins, trajectories: Foursquare, MoveGPT); clinical and biological events (UK Biobank, Epic Cosmos); administrative life events (jobs, address, education: the Danish registries, INPS); elicited responses (surveys, experiments, interviews: Psych-101, SocSci210, Twin-2K-500); screen and device interaction (Screenomics, Mind2Web); competitive play in closed worlds (Lichess, poker); and physiological signals (wearables, sensor panels).
-
-**2. How it comes to exist (the generative stance).** Logged (a byproduct of using a service; nobody asked), elicited (someone asked: surveys, interviews, lab tasks), instrumented (a sensor watched), or derived (inferred from other data). Logged and instrumented data are nonreactive (people do not perform for the record); elicited data is reactive by construction. This is the revealed/stated distinction restated as a property of collection.
-
-**3. Structure.** Timestamped discrete event streams (the dominant FM substrate), session logs, panel waves, relational tables, continuous time series, and free text or dialogue. The field's convergent move is to force all of these into one chronological event stream with a learned vocabulary; the tokenizer is where a structure either survives or dies.
-
-**4. Temporal economics: stock versus flow.** Text is a mined stock, accumulated over decades and consumed once ([Epoch estimates](https://arxiv.org/abs/2211.04325) public text in the low hundreds of trillions of tokens, with exhaustion projected within years). Behavioral data is a flow, regenerated daily by ordinary activity at volumes the Unbox position paper estimates at 100 to 1000 times internet text for retail and payments alone. If pretraining as we know it ends when the text stock does, the behavioral flow is the successor substrate.
-
-**5. Access and linkage.** The three tiers of this file (public, gated, private), crossed with person-linkage: identified, pseudonymous, de-identified, or aggregate-only; and single-domain versus cross-domain per person. The empty cell (cross-domain, per-person, shareable) is the one the field's thesis most needs.
-
-**Properties, not types.** The standard property-taxonomy of behavioral trace data is Salganik's ten characteristics ([Bit by Bit](https://www.bitbybitbook.com/en/1st-ed/observing-behavior/characteristics/), Princeton 2017): big, always-on, and nonreactive (the good), incomplete, inaccessible, nonrepresentative, drifting, algorithmically confounded, dirty, and sensitive (the bad). Every dataset above scores differently on these ten, and most modeling failures in the field trace to one of the bad seven.
-
-## The composition of the world's data
-
-Anchors for the question of what all the world's data actually consists of:
-
-- [The World's Technological Capacity to Store, Communicate, and Compute Information](https://www.science.org/doi/10.1126/science.1200970) (Hilbert and Lopez, Science 2011). The canonical academic measurement: 60 technologies tracked 1986 to 2007, roughly 300 exabytes optimally compressed stored by 2007, with composition by medium.
-- IDC Global DataSphere (Reinsel, Gantz, Rydning, 2018 onward). The industry estimate: ~175 zettabytes created annually by 2025, dominated by video, surveillance, and IoT sensor streams rather than text.
-- [Will we run out of data?](https://arxiv.org/abs/2211.04325) (Villalobos et al., Epoch). The usable public text stock and its exhaustion horizon.
-- [Large Behavioral Models](https://research.unboxai.com/large-behavioral-models.html) (Unbox AI). The behavioral-flow counterclaim: retail and payments behavior alone may exceed internet text by 100 to 1000 times.
-
-The synthesis these four support: curated public text, the substrate of the current FM era, is a small and nearly exhausted sliver of the world's data. The bulk is continuous sensor and video streams plus behavioral event flows, both regenerating daily, both largely unpooled and private. Which is why access, not compute, is this field's binding constraint.
+| Axis | Range | Why it matters |
+|---|---|---|
+| **Consequence** | a click → a purchase → a job change | higher-stakes actions are scarcer but carry far more about the person |
+| **Horizon** | one session → a year → a lifetime | separates transient intent from stable disposition |
+| **Breadth** | one surface → one company → across companies | the union of environments bounds what of a person is observable |
+| **Elicitation** | revealed (logs) → elicited (interviews, surveys) | revealed is honest but narrow; elicited is broad but stated-self |
+| **Identity** | anonymous sessions → pseudonymous IDs → named individuals | determines whether transfer, evaluation, or personas are possible |
 
 ## Observations
 
-- The public tier is dominated by two narrow slices of human behavior: e-commerce and media clicks on one side, lab psychology and survey experiments on the other. Almost nothing public is naturalistic, longitudinal, and per-person at once.
-- The life-trajectory substrate (national registries, biobanks, longitudinal panels) is entirely gated, and panel licenses prohibit the re-identification that individual-level simulation work would require.
-- The largest substrates are all private platform logs, orders of magnitude beyond anything public; every headline scaling result in the field is unreproducible outside the company that reported it.
-- No dataset at any access level follows the same person across multiple life domains: the cross-domain, cross-platform record of one individual, arguably the substrate the field's thesis most needs, does not yet exist in shareable form.
+- **The public tier is broad but shallow, the gated tier is deep but small, and the private tier is both and unreachable.** Every reproducibility problem in this field follows from that.
+- **Cross-surface data on the same person barely exists publicly.** Tenrec and ColdRec are the exceptions, and both are cross-*surface within Tencent*, so the identity join is free and the cross-*company* case has no public substrate at all.
+- **Elicited and revealed data almost never coexist for the same people.** Simile and the genagents interview tier are the closest, and both are proprietary or gated.
+- **The one dataset carrying both behavior and demographics publicly is an ads dataset** (TaobaoAd), which is a small illustration of why advertising deserves more attention in this field than it gets.
