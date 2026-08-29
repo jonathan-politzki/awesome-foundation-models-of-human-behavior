@@ -46,6 +46,8 @@ mindmap
 
 **Measurement**: [Evaluation & Benchmarks](#evaluation--benchmarks) · [Datasets](DATASETS.md)
 
+**Companion files**: [Datasets](DATASETS.md) · [Industrial systems, the per-company ledger](INDUSTRIAL-SYSTEMS.md)
+
 **Ecosystem**: [Privacy, Manipulation & Society](#privacy-manipulation--society) · [Companies & Ecosystem](#companies--ecosystem) · [Extras](#extras) · [Related lists](#related-lists) · [Contributing](#contributing) · [License](#license)
 
 ## Position & Vision
@@ -72,32 +74,24 @@ mindmap
 
 ## Industrial Behavioral Foundation Models & Generative Recommenders
 
+The systems that established a distinct claim. Every major platform has since built its own version of the same recipe; the full per-company ledger, which is the actual evidence for convergence, lives in [INDUSTRIAL-SYSTEMS.md](INDUSTRIAL-SYSTEMS.md).
+
 - [Actions Speak Louder than Words (HSTU)](https://arxiv.org/abs/2402.17152) · Meta, ICML 2024. The founding document: ranking/retrieval reformulated as generative sequence transduction over user action streams, deployed at 1.5T parameters with +12.4% online gains ([code](https://github.com/meta-recsys/generative-recommenders)).
 - [Meta's Generative Ads Model (GEM)](https://engineering.fb.com/2025/11/10/ml-applications/metas-generative-ads-model-gem-the-central-brain-accelerating-ads-recommendation-ai-innovation/) · Meta 2025. LLM-scale ads foundation model used as a teacher whose learnings are distilled across the entire ads model fleet; +5% ad conversions on Instagram.
+- [ExFM: External Large Foundation Model](https://arxiv.org/abs/2502.17494) · Meta, WWW 2025 (industrial, oral). The architecture paper behind GEM, which has none: one trillion-parameter FM taught offline serves many compact vertical models as students via external distillation, amortizing its cost across the fleet. The clearest public statement of the *economic* case for a behavioral foundation model.
+- [LoopFM](https://arxiv.org/abs/2605.29280) · Meta 2026. Scalar distillation's "transfer ratio" **deteriorates as the teacher scales**, because one number cannot carry what a large model knows; passing intermediate embeddings as a user-keyed temporal sequence roughly doubles it (+0.5%, then +1.03% and +1.22% conversions in production). The strongest industrial evidence that the representation, not the prediction, is the deliverable.
+- [Scaling User Modeling: Large-Scale Online User Representations for Ads Personalization in Meta](https://dl.acm.org/doi/10.1145/3589335.3648301) · Meta, WWW 2024 Companion. Meta's ads user-representation system, eighteen months before GEM; the entity-level user-embedding reference in the Meta lineage.
+- [Universal User Modeling (UUM)](https://eng.snap.com/universal_user_modeling) · Snap 2026. A standalone foundational user model over 1+ year of behavior, trained with multi-task next-k event prediction, using per-domain sequence encoders plus information-bottleneck tokens to share across domains without negative transfer. Consumed by six surfaces including **both Ads and Content Search**, the deployed counterexample to running ads and organic as separate models.
+- [Generalized User Representations for Large-Scale Recommendations](https://research.atspotify.com/2025/9/generalized-user-representations-for-large-scale-recommendations) · Spotify 2025. Two-stage framework: an autoencoder compresses multi-signal features into 80-dim user embeddings, downstream products adapt via transfer learning. Aggregates behavior at **~6 months / 1 month / 1 week** (core interests, mid-term shift, fresh intent), served batch plus near-real-time with an explicit consistency-management system for embedding drift.
 - [Netflix's Foundation Model for Personalized Recommendation](https://netflixtechblog.medium.com/integrating-netflixs-foundation-model-into-personalization-applications-cf176b5860eb) · Netflix 2025. One autoregressive model over tokenized member interaction histories replaces a zoo of specialized models; consumed downstream via embeddings, subgraph reuse, and fine-tuning.
-- [Netflix GenRec](https://arxiv.org/abs/2608.10257) · Netflix 2026. LLM-backbone ranker over verbalized user histories, served prefill-only; the paradigm claim: "from feature engineering to context engineering, from bespoke architectures to shared foundation backbones."
 - [360Brew](https://arxiv.org/abs/2501.16450) · LinkedIn 2025. 150B decoder-only model that verbalizes member histories and serves 30+ ranking tasks with one model, generalizing zero-shot to new surfaces.
 - [OneRec](https://arxiv.org/abs/2502.18965) · Kuaishou 2025. A single end-to-end generative model replaces the whole retrieval-ranking cascade at 400M+ DAU, tuned with preference alignment ([technical report](https://arxiv.org/abs/2506.13695); [OneRec-V2](https://arxiv.org/abs/2508.20900): lazy decoder plus RL from real user feedback).
 - [OpenOneRec](https://arxiv.org/abs/2512.24762) · Kuaishou 2026. Open-weights OneRec-Foundation models (1.7B/8B, Qwen-based) plus the RecIF-Bench benchmark ([code](https://github.com/Kuaishou-OneRec/OpenOneRec)); the first major open behavioral-FM release from a platform.
 - [Recommender Systems with Generative Retrieval (TIGER)](https://arxiv.org/abs/2305.05065) · Google DeepMind, NeurIPS 2023. Origin of Semantic IDs: RQ-VAE-quantized content embeddings turn items into token tuples, making next-item recommendation literal next-token generation.
 - [Better Generalization with Semantic IDs](https://arxiv.org/abs/2306.08121) · Google/YouTube, RecSys 2024. Semantic IDs replace raw video IDs in YouTube production ranking, improving generalization to fresh content.
-- [Semantic IDs for Generative Search and Recommendation at Spotify](https://research.atspotify.com/2025/9/semantic-ids-for-generative-search-and-recommendation) · Spotify 2025. Recommendation as instruction-following over semantic-ID vocabularies, with one SID space jointly trained for search and recommendation (deployment paper: [GLIDE](https://arxiv.org/abs/2603.17540)).
-- [Semantic IDs for Recommender Systems at Snapchat](https://arxiv.org/abs/2604.03949) · Snap 2026. Practitioner account of rolling out semantic-ID tokenization across a recommender stack, replication evidence that "tokenize items, generate behavior" is infrastructure.
 - [PinnerFormer](https://arxiv.org/abs/2205.04507) · Pinterest, KDD 2022. The canonical user embedding from action sequences: a transformer trained with a dense all-action loss yields one reusable user representation serving many surfaces.
-- [TransAct V2](https://arxiv.org/abs/2506.02267) · Pinterest 2025. Lifelong user action-sequence modeling with a next-action loss; companion [OmniSage](https://arxiv.org/abs/2504.17811) learns universal multi-entity representations driving ~2.5% sitewide gains.
-- [ARGUS](https://arxiv.org/abs/2507.15994) · Yandex 2025. Autoregressive pretraining over year-long user histories (including negative feedback), scaled 3.2M→1B parameters with consistent gains at every step.
-- [Large User Model (LUM)](https://arxiv.org/abs/2502.08309) · Alibaba, WSDM 2026. Explicitly named a "Large User Model": power-law improvements up to 7B parameters and +2.9% CTR in Taobao sponsored search.
-- [MTGR](https://arxiv.org/abs/2505.18654) · Meituan, CIKM 2025. HSTU adapted while retaining DLRM cross features; confirms the generative recipe replicates at another billion-user platform.
-- [HLLM](https://arxiv.org/abs/2409.12740) · ByteDance 2024. Item-LLM stacked under a User-LLM at up to 7B+7B parameters; ByteDance's [Douyin system](https://arxiv.org/abs/2511.06077) pushes behavior sequences to 10K events at billion-user scale.
-- [JD.com GenRec](https://arxiv.org/abs/2604.14878) · JD, SIGIR 2026. Decoder-only generative retrieval with GRPO preference alignment over hybrid rewards; +9.5% clicks / +8.7% transactions online.
 - [LFM4Ads](https://arxiv.org/abs/2508.14948) · Tencent 2025. The fullest public account of FM→downstream transfer mechanics: user, item, and cross representations transferred at three levels into ads models for +2.45% platform-wide GMV.
-- [PinFM](https://arxiv.org/abs/2507.12704) · Pinterest 2025. Billion-scale user-sequence foundation model, cited by both Netflix and Tencent as a peer system.
-- [GPR](https://arxiv.org/abs/2511.10138) · Tencent 2025. One-model generative paradigm for ads recommendation.
-- [RecGPT-V2](https://arxiv.org/abs/2512.14503) · Alibaba/Taobao 2025. LLMs deployed across interest mining, retrieval, and explanation, shifting from log-fitting to intent-centric recommendation; a partial counterpoint arguing pure log-fitting amplifies filter bubbles.
-- [BehaveGPT](https://arxiv.org/abs/2505.17631) · 2025. Academic counterpart: transformer pretraining over large user-behavior datasets with a DRO-based objective, evaluated on next-behavior prediction and cross-domain adaptation.
 - [The X algorithm (xai-org/x-algorithm)](https://github.com/xai-org/x-algorithm) · X/xAI 2026. The production For You ranker in public source: Phoenix, a transformer over tokenized sequences of viewer actions predicting 18+ action probabilities, replacing the 2023 snapshot's feature-era stack; the only top-tier feed whose feature-to-foundation transition is inspectable in code at both endpoints.
-- [MCM: A Multi-task Pre-trained Customer Model](https://www.amazon.science/publications/mcm-a-multi-task-pre-trained-customer-model-for-personalization) · Amazon, RecSys 2023. A shared customer model pretrained over shopping behavior and reused across personalization tasks.
-- [JourneyFormer](https://arxiv.org/abs/2606.19108) · Airbnb, KDD 2026. Encodes the multi-week guest search-to-booking journey as a transformer sequence, the paradigm in a low-frequency, high-stakes behavioral domain.
 
 ## Life Trajectories & Event Sequences
 
@@ -126,6 +120,8 @@ mindmap
 
 ## Human Simulation & Cognition
 
+- [Social Simulacra](https://arxiv.org/abs/2208.04024) · Stanford/Google, UIST 2022. The paper before Generative Agents, same lead author: generate a *populated* prototype (posts, replies, antisocial behavior) from a designer's community spec, so failure modes that only appear at scale can be seen before launch. Behaviors shift appropriately when the design changes, and participants often cannot distinguish simulacra from real community behavior, the earliest simulated-population framing, and note it was a design instrument before it was a privacy workaround.
+
 Trained models only. Prompted simulation and silicon sampling live in [Extras](#extras): the LLM's priors are the person-model there, and this list reserves the core sections for models with learned person-representations.
 
 - [Centaur: A foundation model of human cognition](https://arxiv.org/abs/2410.20268) · Nature 2025. Llama-3.1-70B fine-tuned on Psych-101 (10M choices, 160 experiments) outpredicts classic cognitive models on held-out participants; representations align better with fMRI after fine-tuning.
@@ -150,6 +146,10 @@ Trained models only. Prompted simulation and silicon sampling live in [Extras](#
 
 The recsys line that matters most here: does a user/item representation transfer across domains and platforms? A curated deep-dive lives at [Recommendation Systems without Explicit ID Features](https://github.com/westlake-repl/Recommendation-Systems-without-Explicit-ID-Features-A-Literature-Review) (Westlake).
 
+- [PeterRec](https://arxiv.org/abs/2001.04253) · Tencent, SIGIR 2020. The first explicit claim that self-supervised pretraining on behavior sequences yields **universal user representations**, evaluated by user-profile prediction on held-out tasks, the probing protocol, invented here, and released with the ColdRec datasets. Adapters ("model patches") over a dilated-CNN backbone, i.e. the first universal user model was built without attention.
+- [Conure](https://arxiv.org/abs/2009.13724) · SIGIR 2021. "One Person, One Model, One World": the first *lifelong/continual* user representation, handling forgetting by iterative weight pruning rather than adapters; nine tasks, one model, offline only.
+- [CAT-ART](https://arxiv.org/abs/2211.11964) · Tencent + Alberta, WSDM 2023. Contrastive autoencoder learns a **global** user embedding across five domains while attention transfers **domain-specific** embeddings between them; a multi-target formulation where all participating domains improve at once.
+- [Mind the Gap: Bridging Behavioral Silos with LLMs](https://arxiv.org/abs/2606.06779) · DoorDash, RecSys 2025 workshop. Hierarchical RAG turns restaurant orders and search queries into taxonomic features that personalize a *different* vertical (grocery) with no shared items; the LLM-as-interlingua argument, deployed.
 - [UniSRec](https://arxiv.org/abs/2206.05941) · KDD 2022. Item text replaces IDs; contrastive multi-domain pretraining transfers cross-domain and cross-platform, the citable moment the field named the retraining problem and chose a foundation-model-shaped answer.
 - [VQ-Rec](https://arxiv.org/abs/2210.12316) · WWW 2023. Text → discrete codes → representation; its item codes are semantic IDs by an independent route, converging with TIGER's RQ-VAE tokens.
 - [Recformer ("Text Is All You Need")](https://arxiv.org/abs/2305.13731) · KDD 2023. Items as flattened attribute sentences, no IDs anywhere; strongest in cold start.
@@ -161,6 +161,9 @@ The recsys line that matters most here: does a user/item representation transfer
 
 - [HSTU scaling result](https://arxiv.org/abs/2402.17152) · Meta, ICML 2024. Model quality follows a power law in training compute across three orders of magnitude "up to GPT-3/LLaMa-2 scale", the first industrial demonstration that behavioral logs scale like text.
 - [Scaling Laws for Behavioral Foundation Models over User Event Sequences](https://research.unboxai.com/scaling-laws-for-behavioral-foundation-models.pdf) · Unbox AI 2026. The Chinchilla-style calibration: ~600 runs across 10^15–10^19 FLOPs on real retail events; compute-optimal event embedders are small (~2% of parameters), the optimal data/model ratio drifts from 344 toward the text ratio with compute, and the evaluation metric is itself part of the scaling law.
+- [Wukong](https://arxiv.org/abs/2403.02545) · Meta, ICML 2024. Scaling law for large-scale recommendation via stacked factorization machines.
+- [Kunlun](https://arxiv.org/abs/2602.10016) · Meta 2026. Scaling laws for massive-scale recommendation through unified architecture design.
+- [LLaTTE](https://arxiv.org/abs/2601.20083) · Meta 2026. Scaling laws for **multi-stage** sequence modeling in ads recommendation: an offline model over long histories produces cached embeddings, an online ranker combines them with real-time signals. The companion [engineering post](https://engineering.fb.com/2026/08/05/ml-applications/from-user-sequences-to-scaling-laws-a-multi-stage-architecture-for-metas-ads-ranking/) reports log-linear gains in compute and the finding that **"sequence diversity beats sequence homogeneity"**, a balanced mix of action types yields "richer behavioral representations of users" than homogeneous sequences of high-signal actions.
 - [Scaling Law of Large Sequential Recommendation Models](https://arxiv.org/pdf/2311.11351) · RecSys 2024. Power-law loss curves in model/data size on pure interaction sequences, with scaled models disproportionately better on hard long-tail predictions.
 - [Scaling Sequential Recommendation Models with Transformers](https://arxiv.org/abs/2412.07585) · 2024. The second clean academic scaling study; honest about behavioral data being scarcer and sparser than text, so data is often the binding constraint.
 - [Towards Generalizable and Efficient Large-Scale Generative Recommenders](https://arxiv.org/abs/2605.23312) · Netflix, RecSys 2026. Scales a production generative recommender 2M→1B parameters and finds scaling is heterogeneous across downstream tasks, some plateau, some keep improving.
@@ -173,6 +176,7 @@ The recsys line that matters most here: does a user/item representation transfer
 
 ## Federated & Cross-Silo
 
+- [Halo / Origin / Aquila](https://halo.wfanet.org/) · WFA, ISBA, ANA, 2019–present. The advertising industry's cross-media measurement program, with Meta, Google, Amazon, Snap and TikTok participating: 250k+ lines of open-source code including a **Virtual ID** schematic and private reach-and-frequency processing, so publishers compute deduplicated cross-company reach without exchanging identities. The most serious attempt at cross-organizational person coordination on record, and after six years the achievable shared person-fact is still a *count*, not a representation.
 - [PFCR: Prompt-enhanced Federated Content Representation Learning](https://arxiv.org/abs/2401.14678) · WWW 2024. Cross-domain federated recommendation with no overlapped-user requirement: content-grounded item representations dissolve the shared-ID blocker.
 - [TransFR](https://arxiv.org/abs/2402.01124) · 2024. Frozen-PLM text encodings as universal content representations, freeing federated recommendation from shared ID tables.
 - [FedKD](https://arxiv.org/abs/2108.13323) · Nature Communications 2022. Federated mutual distillation, evaluated on news recommendation.
@@ -200,6 +204,8 @@ The recsys line that matters most here: does a user/item representation transfer
 
 ## Evaluation & Benchmarks
 
+- [BARS / FuxiCTR](https://openbenchmark.github.io/BARS/) · 2021–. The CTR-prediction benchmark suite with public leaderboards and pinned dataset IDs; the standing, versioned instrument the sequential-rec side lacks, and a demonstration that the field builds such instruments once it agrees on a metric.
+- [RecAI](https://github.com/microsoft/RecAI) · Microsoft. Seven-component LLM×recsys program, all at top venues; two matter here: **RecExplainer** (KDD 2024) uses LLMs as *surrogate models to interpret deep recommenders*, the closest existing instance of reading a person-model's representation out in language, and **RecLM-eval**, an evaluation framework spanning retrieval, ranking, and explainability.
 - [Twin-2K-500](https://arxiv.org/pdf/2505.17479) · Columbia 2025. 2,058 US participants answering 500+ questions across four waves, built for benchmarking LLM digital twins with held-out-wave ground truth ([dataset](https://huggingface.co/datasets/LLM-Digital-Twin/Twin-2K-500)).
 - [SimBench](https://arxiv.org/abs/2510.17516) · 2025. Unifies 20 datasets into a standardized group-level simulation benchmark; best LLMs score ~41/100, and fidelity scales with model size but not with inference-time compute.
 - [BehaviorBench](https://arxiv.org/abs/2606.24162) · 2026. Benchmarks FMs on behavior prediction, strategic decisions, and trait inference: general LLMs win individual prediction, behavior-fine-tuned models win distributional alignment (a same-named [traces benchmark](https://arxiv.org/pdf/2606.02798) targets decisions from behavioral logs).
@@ -270,6 +276,8 @@ Where the person-representation lives when it is tokens rather than weights.
 
 ### Industry writeups (secondhand sources)
 
+- [Training GEM at LLM scale](https://engineering.fb.com/2026/08/03/ml-applications/training-gem-at-llm-scale-meta-ads-recommendation-foundation-model/) · Meta 2026. GEM is **not** initialized from an LLM: a hybrid architecture with trillions of sparse and billions of dense parameters, trained from scratch on ad content and engagement. "LLM-scale" means infrastructure, and the counterpoint worth quoting: "AI infrastructure optimized for LLM training does not directly transfer, requiring significant innovation," because "today's data center GPUs and their software stacks are mostly optimized for LLM workloads, whereas recommendation workloads have a fundamentally different profile."
+- [Sequence learning for personalized ads recommendation](https://engineering.fb.com/2024/11/19/data-infrastructure/sequence-learning-personalized-ads-recommendations/) · Meta 2024. Event-Based Features "replace traditional human-engineered sparse features as primary model inputs," and **dense tokenization** puts sparse features and behavioral events into one sequence so attention discovers feature crosses that were previously hand-built. Note the terminology: Meta's "token" is a dense vector attention reads, not a discrete code a model generates.
 - [Stripe's payments foundation model](https://deepakness.com/raw/stripe-transfer-based-model/) · Stripe 2025. Trained on tens of billions of transactions; general-purpose transaction vectors sharply improve card-testing fraud detection (landscape overview [here](https://dwaynegefferie.substack.com/p/transaction-foundation-models), covering Plaid's ~12,000-institution model, Mastercard, and Nubank).
 
 ## Related lists
