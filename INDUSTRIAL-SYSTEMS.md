@@ -11,9 +11,9 @@ Individually many of these are replications. Collectively they are the field's s
 | **Serving architecture** | how one large offline model reaches many latency-bound production models | ExFM, the multi-stage ads stack |
 | **Transfer mechanism** | what actually moves from the foundation model to the serving model, and how much survives | LoopFM, LFM4Ads |
 | **Tokenization deployment** | semantic IDs rolled out in a production stack (the method itself is in [METHODS.md](METHODS.md)) | YouTube, Spotify, Snapchat |
-| **Platform replication** | another company's own build of the generative-recommender recipe | Netflix GenRec, LUM, MTGR, HLLM, JD GenRec, ARGUS, PinFM, TransAct V2, GPR, RecGPT-V2 |
+| **Platform replication** | another company's own build of the generative-recommender recipe | Netflix GenRec, LUM, MTGR, HLLM, LONGER, JD GenRec, ARGUS, PinFM, TransAct V2, GPR, RecGPT-V2 |
 | **Production ranker** | a deployed feed ranker, inspectable or documented end to end | the X algorithm |
-| **Domain instance** | the recipe in a specific behavioral vertical | MCM (retail), JourneyFormer (travel), BehaveGPT (academic) |
+| **Domain instance** | the recipe in a specific behavioral vertical | MCM (retail), JourneyFormer (travel), CDUM (video duration), BehaveGPT (academic) |
 
 ## Serving architectures and transfer mechanisms
 
@@ -37,6 +37,7 @@ How a trillion-parameter offline model reaches a model that must answer in milli
 - [Large User Model (LUM)](https://arxiv.org/abs/2502.08309) · Alibaba, WSDM 2026. Explicitly named a "Large User Model": power-law improvements up to 7B parameters and +2.9% CTR in Taobao sponsored search.
 - [MTGR](https://arxiv.org/abs/2505.18654) · Meituan, CIKM 2025. HSTU adapted while retaining DLRM cross features; confirms the generative recipe replicates at another billion-user platform.
 - [HLLM](https://arxiv.org/abs/2409.12740) · ByteDance 2024. Item-LLM stacked under a User-LLM at up to 7B+7B parameters; ByteDance's [Douyin system](https://arxiv.org/abs/2511.06077) pushes behavior sequences to 10K events at billion-user scale.
+- [LONGER](https://arxiv.org/abs/2505.04421) · ByteDance, RecSys 2025. GPU-efficient long-sequence transformer for industrial recommenders (global-token attention plus a token-merge module to cut quadratic cost); deployed across 10+ ByteDance ads and e-commerce surfaces at billion-user scale.
 - [JD.com GenRec](https://arxiv.org/abs/2604.14878) · JD, SIGIR 2026. Decoder-only generative retrieval with GRPO preference alignment over hybrid rewards; +9.5% clicks / +8.7% transactions online.
 - [PinFM](https://arxiv.org/abs/2507.12704) · Pinterest 2025. Billion-scale user-sequence foundation model, cited by both Netflix and Tencent as a peer system.
 - [GPR](https://arxiv.org/abs/2511.10138) · Tencent 2025. One-model generative paradigm for ads recommendation.
@@ -47,3 +48,4 @@ How a trillion-parameter offline model reaches a model that must answer in milli
 - [BehaveGPT](https://arxiv.org/abs/2505.17631) · 2025. Academic counterpart: transformer pretraining over large user-behavior datasets with a DRO-based objective, evaluated on next-behavior prediction and cross-domain adaptation.
 - [MCM: A Multi-task Pre-trained Customer Model](https://www.amazon.science/publications/mcm-a-multi-task-pre-trained-customer-model-for-personalization) · Amazon, RecSys 2023. A shared customer model pretrained over shopping behavior and reused across personalization tasks.
 - [JourneyFormer](https://arxiv.org/abs/2606.19108) · Airbnb, KDD 2026. Encodes the multi-week guest search-to-booking journey as a transformer sequence, the paradigm in a low-frequency, high-stakes behavioral domain.
+- [CDUM: Coarse-to-fine Dynamic Uplift Modeling](https://arxiv.org/abs/2410.16755) · Kuaishou 2024. Treats video duration as a treatment variable, pairing an offline module over long-term preferences with an online module over real-time context; deployed platform-wide, serving hundreds of millions of users daily.

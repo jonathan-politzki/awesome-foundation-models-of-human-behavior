@@ -27,7 +27,11 @@ graph LR
 | **[OpenOneRec + RecIF-Bench](https://arxiv.org/abs/2512.24762)** (Kuaishou) | short-video, ads, product interactions | ~96M–100M interactions · 160K–200K users | released *with open model weights*; 8 tasks in a four-layer capability ladder from semantic alignment to reasoning | OpenOneRec |
 | **[MovieLens 25M](https://grouplens.org/datasets/movielens/)** | movie ratings and interactions | 25M ratings | the default sequential-rec substrate; text metadata enables content modeling | SASRec/BERT4Rec lineage |
 | **[Amazon Reviews 2023](https://amazon-reviews-2023.github.io/)** (McAuley lab) | product interactions with rich item text | dozens of categories | the standard cross-domain transfer testbed | UniSRec lineage, MiniOneRec |
+| **[Douban (DGRec release)](https://arxiv.org/abs/1902.09362)** (Song et al., WSDM 2019) | movie, book and music ratings, **one account across all three** | 94,890 movie / 46,548 book / 39,742 music users · ~15.4M events · unix timestamps, 2005-2017 | **per-event timestamps and a single identity spanning three media domains**, unlike the ratings-only, no-time Douban files that circulate widely in cross-domain recommendation papers; 26,342 users are tri-domain | DGRec |
 | **[Taobao UserBehavior / Tmall / Yoochoose / RetailRocket](https://tianchi.aliyun.com/dataset/649)** | e-commerce view, cart, purchase | varies | multi-event-type streams with real intent structure | sequential behavior modeling |
+| **[Taobao-MM](https://huggingface.co/datasets/TaoBao-MM/Taobao-MM)** | e-commerce interaction sequences with precomputed multimodal item embeddings | 8.79M users · 35.4M items · 99M labeled samples | Apache-2.0 and same-day-downloadable at this scale is rare; per-event timestamp field not confirmed on the release page | multimodal sequential recommendation |
+| **[TencentGR-1M / TencentGR-10M](https://huggingface.co/datasets/TAAC2025/TencentGR-1M)** (TAAC2025) | ads exposure/click/conversion sequences with multimodal item embeddings | 1M or 10M users (two tracks) · ~4.8M items | de-identified per-user sequences with timestamps, CC-BY-4.0, released April 2026 | TAAC2025 competition |
+| **[RecSys Challenge 2025](https://recsys.synerise.com/summary)** (Synerise "Universal Behavioral Profiles") | buy, add-to-cart, remove-from-cart clickstream | 1M client_ids in the profiling task | real per-event `client_id` and timestamp from an online retailer; CC BY-NC 4.0, and whether the download persists past the challenge window is unconfirmed | RecSys Challenge 2025 entrants |
 | **[Steam / Last.fm / Spotify MPD](https://www.aicrowd.com/challenges/spotify-million-playlist-dataset-challenge)** | plays and purchases over long horizons | varies | long per-user sequences with strong habit signal | habit and long-horizon modeling |
 | **[Foursquare / Gowalla](https://sites.google.com/site/yangdingqi/home/foursquare-dataset)** | check-ins | varies | time-and-place mobility; highly habitual | next-location prediction |
 | **[MIND](https://msnews.github.io/)** (Microsoft) | news click logs | ~1M users | the federated-recsys default | FedKD |
@@ -47,6 +51,7 @@ graph LR
 | **[HUMANUAL](https://github.com/zou-group/humanlm)** | daily-life issues, political blogs, chat | 23K users · 227K responses | six public collections unified | HumanLM |
 | **[Cognitive Genome](https://github.com/microsoft/AnthropomorphicIntelligence)** | Reddit/Twitter/Blogger/Amazon logs | 5.5M logs · 282K identified users → 1.27M QA pairs | public traces distilled into person-conditioned QA | HumanLLM |
 | **[OdysSim corpus](https://arxiv.org/abs/2606.14199)** | aggregated behavioral records | 21.4M interactions · 10B tokens · 62 datasets | the pooled-corpus approach to the scarcity problem | OdysSim |
+| **[ITC Database](https://www.nature.com/articles/s41597-026-06947-4)** (intertemporal-choice compilation) | intertemporal-choice trials and response times | 11,852 subjects · 1,172,644 trials · 100 studies | open, ongoing, growing by submission; subject-level records per study, cross-study linkage not confirmed | intertemporal-choice and cognitive modeling |
 
 ### Relational, transactional, and other
 
@@ -66,6 +71,8 @@ graph LR
 | **Longitudinal panels** (PSID, NLSY79/97, HRS, Add Health, MIDUS, German SOEP, UK birth cohorts) | decades of income, health, family, attitudes for the same individuals | free with registration; **re-identification prohibited**, so trajectories yes, named personas no | panel-based trajectory work |
 | **genagents interview tier** (Stanford) | 1,000 two-hour interviews + individual ground-truth responses | by application (demographic tier is public) | Generative Agent Simulations of 1,000 People |
 | **Screenomics screen logs** | 20 users · one month · 1.9M screenshots → 360K captioned actions | IRB-restricted | LongNAP |
+| **[OpenMHC](https://github.com/AshleyLab/OpenMHC)** (Open My Heart Counts) | wearable/mobile health-sensing traces, 60M+ sensor-hours, user ids and dates in benchmark tasks | Data Use Agreement, "qualified researchers" | wearable foundation model benchmarking |
+| **[NetMob25](https://arxiv.org/abs/2506.05903)** | individual GPS trip trajectories with mode/purpose annotations, Greater Paris region; 3,337 participants, ~500M GPS points | terms of use plus an NDA (the paper itself is CC-BY-4.0) | mobility foundation model research |
 
 **The pattern worth noticing**: the gated tier is where *cross-domain coverage of one person* lives. Health plus income plus employment plus family, for the same individual, over decades. No company has this, which is why the national-registry work is the field's actual ceiling on person-coverage.
 
@@ -99,26 +106,58 @@ Not obtainable, but they define the frontier. Company, claimed scale, and the pa
 
 Where the field measures itself. Note the asymmetry: **CTR prediction has a standing, versioned, leaderboard-backed benchmark; person-representation quality and cross-domain transfer do not.**
 
+**Ground truth** is added as its own column below because it is the fact a benchmark's headline number most often hides. A model scored against a **logged action** (a real click, purchase, or A/B outcome) is answering a different question than one scored against a **stated answer** (a survey or interview response), a **human rating**, an **LLM judge**'s opinion, or a **synthetic key** (a scripted verifier or researcher-authored answer with no real person behind it at all). All five appear below, often for benchmarks that read, from the name alone, as if they measure the same thing.
+
 ### Prediction and ranking
 
-| Benchmark | What it scores | Notable |
-|---|---|---|
-| **[BARS / FuxiCTR](https://openbenchmark.github.io/BARS/)** | CTR prediction (AUC, LogLoss) | public leaderboards and **pinned dataset IDs** so a result names its exact preprocessing; standard members are TaobaoAd (26M ad records, 1.14M users, ships demographic profile fields), KuaiVideo (3.24M interactions, 10K users), and Amazon Electronics in CTR framing (192K users, ~3M samples) |
-| **[RecIF-Bench](https://arxiv.org/abs/2512.24762)** | 8 tasks across short video, ads, product | a four-layer capability ladder: semantic alignment → prediction → instruction following → reasoning |
-| **[NineRec](https://arxiv.org/abs/2309.07705)** | cross-domain and cross-platform transfer | the closest thing to a standing transfer benchmark |
-| **[RecAI / RecLM-eval](https://github.com/microsoft/RecAI)** | retrieval, ranking, explainability for LM-based recommenders | ships alongside **RecExplainer** (KDD 2024), which uses LLMs as surrogate models to interpret deep recommenders |
+| Benchmark | What it scores | Ground truth | Notable |
+|---|---|---|---|
+| **[BARS / FuxiCTR](https://openbenchmark.github.io/BARS/)** | CTR prediction (AUC, LogLoss) | logged action (clicks) | public leaderboards and **pinned dataset IDs** so a result names its exact preprocessing; standard members are TaobaoAd (26M ad records, 1.14M users, ships demographic profile fields), KuaiVideo (3.24M interactions, 10K users), and Amazon Electronics in CTR framing (192K users, ~3M samples) |
+| **[RecIF-Bench](https://arxiv.org/abs/2512.24762)** | 8 tasks across short video, ads, product | logged action | a four-layer capability ladder: semantic alignment → prediction → instruction following → reasoning |
+| **[NineRec](https://arxiv.org/abs/2309.07705)** | cross-domain and cross-platform transfer | logged action | the closest thing to a standing transfer benchmark |
+| **[RelBench](https://relbench.stanford.edu)** | 66 pinned temporal tasks on real relational logs (churn, lifetime value, purchase) | logged action | a maintained leaderboard over relational databases, not just flat interaction logs |
+| **[RecBole](https://github.com/RUCAIBox/RecBole)** | Recall, NDCG, MRR at K on standard leave-one-out splits | logged action | SASRec and BERT4Rec ship built in, the default reproducibility harness for the sequential-rec lineage |
+| **[RecFound](https://arxiv.org/abs/2506.11999)** | 13 tasks spanning generative and embedding-based recommendation | logged action | a broader task battery than any single dataset's own leaderboard |
+| **[RecBase](https://arxiv.org/abs/2509.03131)** | zero-shot cross-domain recommendation accuracy | logged action | tests transfer without any fine-tuning on the target domain |
+| **[AgentRecBench](https://huggingface.co/datasets/SGJQovo/AgentRecBench)** | agentic vs. classical recommender methods on a maintained comparison table | logged action | tracks whether LLM-agent recommenders actually beat the classical baselines they are compared against |
+| **[RecAI / RecLM-eval](https://github.com/microsoft/RecAI)** | retrieval, ranking, explainability for LM-based recommenders | logged action | ships alongside **RecExplainer** (KDD 2024), which uses LLMs as surrogate models to interpret deep recommenders |
 
 ### Simulation and person fidelity
 
-| Benchmark | What it scores | Headline finding |
-|---|---|---|
-| **[SimBench](https://arxiv.org/abs/2510.17516)** | group-level simulation, 20 datasets unified | best LLMs score ~41/100; fidelity scales with model size but **not** with inference-time compute |
-| **[BehaviorBench](https://arxiv.org/abs/2606.24162)** | behavior prediction, strategic decisions, trait inference | general LLMs win *individual* prediction; behavior-fine-tuned models win *distributional* alignment |
-| **[Twin-2K-500](https://arxiv.org/pdf/2505.17479)** | digital twins against a held-out wave | per-person ground truth rather than aggregate match |
-| **[PersonaGym](https://arxiv.org/abs/2407.18416)** | persona-agent consistency | frontier models fail to stay in character, and **larger models are not reliably better** |
-| **[TwinVoice](https://arxiv.org/pdf/2510.25536)** | imitation of specific individuals | decomposed into opinion consistency, memory recall, linguistic style |
-| **[Mind the Sim2Real Gap](https://arxiv.org/abs/2603.11245)** (CMU, COLM 2026) | 451 humans vs 31 LLM user simulators | simulators are too cooperative and stylistically uniform; simulation runs in "easy mode," and higher general capability does not yield more faithful simulation |
-| **[Validation is the central challenge](https://link.springer.com/article/10.1007/s10462-025-11412-6)** (AI Review 2026) | systematic review of 35 LLM-ABM papers | most "validation" is face validity; comparison to empirical human data is the only scientific bar and the **rarest** strategy |
+| Benchmark | What it scores | Ground truth | Headline finding |
+|---|---|---|---|---|
+| **[SimBench](https://arxiv.org/abs/2510.17516)** | group-level simulation, 20 datasets unified | stated answer | best LLMs score ~41/100; fidelity scales with model size but **not** with inference-time compute |
+| **[BehaviorBench](https://arxiv.org/abs/2606.24162)** (Be.FM team) | behavior prediction, strategic decisions, trait inference | mixed: individual accuracy and population distributional alignment, reported separately | general LLMs win *individual* prediction; behavior-fine-tuned models win *distributional* alignment |
+| **[BehaviorBench](https://arxiv.org/abs/2606.02798)** (Modeling Real-World User Decisions from Behavioral Traces) | user-decision prediction from behavioral traces | logged action | an unrelated paper sharing the same name as the row above, worth flagging since both surface under one search |
+| **[Twin-2K-500](https://arxiv.org/pdf/2505.17479)** | digital twins against a held-out wave | stated answer (survey, held-out wave) | per-person ground truth rather than aggregate match |
+| **[PersonaGym](https://arxiv.org/abs/2407.18416)** | persona-agent consistency | LLM judge | frontier models fail to stay in character, and **larger models are not reliably better** |
+| **[TwinVoice](https://arxiv.org/pdf/2510.25536)** | imitation of specific individuals | mixed: matched against a real person's own text where the source supports it; persona and narrative dimensions read as LLM-judge or overlap-metric scored | decomposed into opinion consistency, memory recall, linguistic style |
+| **[Mind the Sim2Real Gap](https://arxiv.org/abs/2603.11245)** (CMU, COLM 2026) | 451 humans vs 31 LLM user simulators | mixed: partly overlap with real human-annotated transcripts, partly survey agreement and task-success calibration | simulators are too cooperative and stylistically uniform; simulation runs in "easy mode," and higher general capability does not yield more faithful simulation |
+| **[SOTOPIA](https://arxiv.org/abs/2310.11667)** (Sotopia-Hard) | social-goal completion and relationship/knowledge/secret-keeping dimensions in scripted two-party scenarios | LLM judge | the widely-used social-intelligence benchmark behind several downstream evaluations in this list |
+| **[MirrorBench](https://arxiv.org/abs/2601.08118)** | how human-like a user-proxy agent is, across an extensible criteria set | LLM judge | one of several 2026 entrants scoring "human-likeness" directly rather than a downstream task |
+| **[SimulatorArena](https://arxiv.org/abs/2510.05444)** | document-creation and math-tutoring multi-turn interactions, scored for realism as a simulator proxy | LLM judge | realism scored by a judge model, not by matching a real user's own transcript |
+| **[BehaviorChain](https://arxiv.org/abs/2502.14642)** | persona-based behavior-chain simulation: whether a sequence of a character's decisions stays internally consistent | LLM judge | consistency, not correctness against a real person |
+| **[LifeChoice](https://arxiv.org/abs/2404.12138)** ("Character is Destiny") | whether a role-playing agent makes persona-driven decisions consistent with a character's established traits | human rating | one of the few sim-fidelity benchmarks scored by people rather than a model |
+| **[CoSER](https://arxiv.org/abs/2502.09082)** | coordinated LLM-based persona simulation of literary and dramatic roles | mixed: scored against the source text's actual dialogue for fictional characters, closer to a logged action for that narrow case | a rare instance where "the real answer" exists and is checkable, because the character's real lines are on the page |
+| **[HUMANUAL](https://github.com/zou-group/humanlm)** (HumanLM benchmark suite) | user-response alignment and human-likeness across 6 datasets (chat, email, news, politics, book, opinion) | logged action (real recorded text from about 26,000 users, 216,000 responses) | one of the few simulation benchmarks whose answer key is real recorded human text, not a judge's opinion of it |
+| **[HumanLLM](https://arxiv.org/abs/2601.15793)** (Cognitive Genome benchmark) | personalized understanding and simulation of human nature | LLM judge | built from real public traces, but scored generatively by a judge rather than against the traces themselves |
+| **[AlignUSER](https://aclanthology.org/2026.acl-long.747)** | user-alignment across four public recommendation datasets, plus a real A/B correlation check | logged action, plus a real A/B correlation (r=0.71 against 55 real tests) | one of the strongest sim-to-real validations in the list: prompted frontier models score 8-22% next-action accuracy against 52.9% trained |
+| **[ContextSim validation](https://arxiv.org/abs/2604.09549)** (Woven by Toyota) | correlation between simulator-predicted and measured real A/B test outcomes | logged action (55 real historical A/B tests) | real A/B ground truth is rare in this table; this and AlignUSER are the two entries that have it |
+| **[Agent A/B](https://arxiv.org/abs/2504.09723)** | whether simulated persona agents reproduce the direction of a real UI A/B test's effect | logged action (a parallel real human A/B experiment) | direction-of-effect agreement with an actual experiment, not a judge's plausibility call |
+| **[CitySim](https://arxiv.org/abs/2506.21805)** (person-level evaluation) | person-level prediction of real well-being survey responses inside an urban agent-based simulation | stated answer (1,200 real survey responses) | aggregate time-use matches national survey data, but individual-level prediction loses to a plain gradient-boosted baseline |
+| **[Lost in Simulation](https://arxiv.org/abs/2601.17087)** (multi-country tau-bench study) | cross-country and cross-dialect variation in simulated-user task success and behavioral realism | human rating (real multi-country participants on tau-bench retail tasks) | realism gaps vary by country and dialect, not just by model |
+| **[Simile confidence-model evaluation](https://www.simile.com/blog/confidence)** | decision-grade confidence calibration for population-level digital twins | mixed: population total-variation-distance metric plus agreement with 14 human raters (Fleiss kappa 0.75) | a linear probe on the simulation model's own hidden states predicts its error better than external methods |
+| **[Validation is the central challenge](https://link.springer.com/article/10.1007/s10462-025-11412-6)** (AI Review 2026) | systematic review of 35 LLM-ABM papers | n/a (a review paper, not itself a scored suite) | most "validation" is face validity; comparison to empirical human data is the only scientific bar and the **rarest** strategy |
+
+### Theory of mind and social reasoning
+
+A different family: no real person is scored at all. The answer key is a researcher-authored scenario with one correct reading, useful for testing whether a model tracks beliefs and intentions, not whether it predicts what any actual person would do.
+
+| Benchmark | What it scores | Ground truth | Notable |
+|---|---|---|---|
+| **[FANToM](https://arxiv.org/abs/2310.15421)** | machine theory-of-mind under conversational belief tracking and false-belief stress tests | synthetic key | designed adversarially against shortcut answers |
+| **[Hi-ToM](https://arxiv.org/abs/2310.16755)** | higher-order (nested) theory-of-mind reasoning accuracy | synthetic key | tests belief-about-belief-about-belief, not first-order inference |
+| **[ToMi / ParaphrasedToMi](https://arxiv.org/abs/2306.00924)** | theory-of-mind accuracy under paraphrased, harder-to-shortcut question wording | synthetic key | the paraphrase variant exists specifically because models were gaming the original's fixed wording |
 
 ## A taxonomy of behavioral data
 
@@ -136,3 +175,5 @@ Where the field measures itself. Note the asymmetry: **CTR prediction has a stan
 - **Cross-surface data on the same person barely exists publicly.** Tenrec and ColdRec are the exceptions, and both are cross-*surface within Tencent*, so the identity join is free and the cross-*company* case has no public substrate at all.
 - **Elicited and revealed data almost never coexist for the same people.** Simile and the genagents interview tier are the closest, and both are proprietary or gated.
 - **The one dataset carrying both behavior and demographics publicly is an ads dataset** (TaobaoAd), which is a small illustration of why advertising deserves more attention in this field than it gets.
+- **Cross-media data on one identified person is rarer than cross-surface data within one company.** The Douban release above is the public counterexample (one account, movie/book/music, real timestamps), and it is easy to miss: several widely-used Douban files in cross-domain recommendation papers are ratings-only mirrors with no timestamps at all, a different release entirely.
+- **Reading the Benchmarks tables by their new Ground truth column**: of the 34 listed there, 14 are scored wholly or partly against a real logged action (a click, purchase, or A/B outcome), 6 against an LLM judge's opinion, 3 against a survey or interview answer, 3 against a synthetic or researcher-authored key with no real person behind it, 2 against a human rating, and the rest mix these or don't apply. A benchmark's name rarely tells you which one it is; this list otherwise does not either, which is the gap this column is meant to close.
